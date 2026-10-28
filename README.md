@@ -2,7 +2,36 @@
 
 Plan for analyzing **Game 1: Head to Head** of the Castle Challenge. The first goal is to evaluate every legal allocation, rank them by average points against all other legal allocations, and save a leading set of strategies for further analysis.
 
-This README describes the proposed program. The program has not been implemented yet.
+The program below is implemented in the `castles` package. See [Usage](#usage) to run it.
+
+## Usage
+
+Requires Python 3.10+ and NumPy (`pip install -r requirements.txt`).
+
+```bash
+python -m castles.baseline                    # phases 1-4: top 10,000 + ties -> outputs/shortlist.csv, outputs/summary.json
+python -m castles.baseline --top-percent 0.5  # or a top-percentile cutoff
+python -m castles.baseline --min-average 9.8  # or a minimum-average cutoff
+python -m castles.baseline --full-ranking     # also export all 4,598,126 strategies (large)
+python -m castles.analysis                    # phase 5: shortlist re-ranking, extra pools, counters
+python -m castles.analysis --applicants choices.csv   # add real applicant choices (columns a1..a5, optional count)
+python -m pytest                              # validation suite (implementation and validation order below)
+```
+
+`--soldiers` and `--values` run a smaller or different game, which is how the tests check the exact method against an explicit round robin.
+
+| Module | Contents |
+| --- | --- |
+| `castles/game.py` | Game parameters, input validation, batched lexicographic allocation generator, direct head-to-head scoring |
+| `castles/scoring.py` | Histograms (closed form or from any pool), `q` tables, integer score keys `Z`, exact averages |
+| `castles/baseline.py` | Two-pass top-k / percentile / minimum-average selection keeping cutoff ties, CSV/JSON export, terminal summary |
+| `castles/analysis.py` | Phase 5: survivors vs survivors, `balanced` / `value_ordered` / `high_value_focus` / applicant pools, rank comparison, counter search |
+
+Phase 5 writes `outputs/shortlist_reranked.csv` (baseline score and rank kept next to each pool's score and rank), `outputs/counters.csv` (for each leader, the best counter inside the shortlist and the best counter among all legal allocations), and `outputs/analysis_summary.json` (pool definitions and sizes, Spearman rank correlation with the baseline, top strategies per pool). Filter pools exclude a strategy's own entry when it belongs to the pool. Applicant pools do not, since a submission really does face every applicant.
+
+### Initial results
+
+The full baseline runs in about 0.4 s. The best strategy against all legal allocations is `(0, 12, 23, 30, 35)`, averaging 9.8849 points. The top-10,000 cutoff is 9.7517 with no ties at the cutoff. Rankings change a lot under other pools (Spearman about 0.09 to 0.23 within the shortlist). For example, the shortlist's own leader is `(0, 2, 24, 34, 40)`, baseline rank #9163.
 
 ## Game rules
 

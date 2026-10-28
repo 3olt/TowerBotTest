@@ -1,0 +1,819 @@
+{
+  "source": {
+    "shortlist": "outputs\\shortlist.csv",
+    "shortlist_size": 10000,
+    "baseline_pool": "all_legal_allocations"
+  },
+  "pools": [
+    {
+      "name": "shortlist",
+      "definition": "the baseline shortlist, each survivor once; own entry excluded",
+      "size": 10000
+    },
+    {
+      "name": "balanced",
+      "definition": "legal allocations with every castle between 10 and 30 soldiers",
+      "size": 116601
+    },
+    {
+      "name": "value_ordered",
+      "definition": "legal allocations with soldiers non-decreasing in castle value (a1 <= ... <= a5)",
+      "size": 46262
+    },
+    {
+      "name": "high_value_focus",
+      "definition": "legal allocations sending at least 60 soldiers to the two most valuable castles",
+      "size": 876211
+    }
+  ],
+  "rank_correlation_vs_baseline": {
+    "shortlist": 0.09240922347609223,
+    "balanced": 0.1934627605346276,
+    "value_ordered": 0.22472638868726388,
+    "high_value_focus": 0.1301699707976997
+  },
+  "top_by_pool": {
+    "shortlist": [
+      {
+        "allocation": [
+          0,
+          2,
+          24,
+          34,
+          40
+        ],
+        "rank": 1,
+        "average": 9.927642764276428,
+        "baseline_rank": 9163
+      },
+      {
+        "allocation": [
+          0,
+          2,
+          25,
+          33,
+          40
+        ],
+        "rank": 2,
+        "average": 9.903890389038905,
+        "baseline_rank": 8583
+      },
+      {
+        "allocation": [
+          1,
+          2,
+          25,
+          33,
+          39
+        ],
+        "rank": 3,
+        "average": 9.890989098909891,
+        "baseline_rank": 9541
+      },
+      {
+        "allocation": [
+          0,
+          2,
+          25,
+          34,
+          39
+        ],
+        "rank": 4,
+        "average": 9.886288628862886,
+        "baseline_rank": 8249
+      },
+      {
+        "allocation": [
+          0,
+          2,
+          24,
+          33,
+          41
+        ],
+        "rank": 5,
+        "average": 9.880988098809881,
+        "baseline_rank": 9898
+      },
+      {
+        "allocation": [
+          0,
+          2,
+          24,
+          35,
+          39
+        ],
+        "rank": 6,
+        "average": 9.861636163616362,
+        "baseline_rank": 9108
+      },
+      {
+        "allocation": [
+          0,
+          2,
+          26,
+          33,
+          39
+        ],
+        "rank": 7,
+        "average": 9.83853385338534,
+        "baseline_rank": 7903
+      },
+      {
+        "allocation": [
+          0,
+          2,
+          25,
+          32,
+          41
+        ],
+        "rank": 8,
+        "average": 9.816031603160315,
+        "baseline_rank": 9572
+      },
+      {
+        "allocation": [
+          0,
+          2,
+          26,
+          32,
+          40
+        ],
+        "rank": 9,
+        "average": 9.814931493149315,
+        "baseline_rank": 8580
+      },
+      {
+        "allocation": [
+          1,
+          2,
+          25,
+          34,
+          38
+        ],
+        "rank": 10,
+        "average": 9.810881088108811,
+        "baseline_rank": 9507
+      }
+    ],
+    "balanced": [
+      {
+        "allocation": [
+          0,
+          6,
+          31,
+          31,
+          32
+        ],
+        "rank": 1,
+        "average": 12.0,
+        "baseline_rank": 5802
+      },
+      {
+        "allocation": [
+          0,
+          7,
+          31,
+          31,
+          31
+        ],
+        "rank": 1,
+        "average": 12.0,
+        "baseline_rank": 5848
+      },
+      {
+        "allocation": [
+          0,
+          5,
+          31,
+          31,
+          33
+        ],
+        "rank": 1,
+        "average": 12.0,
+        "baseline_rank": 6351
+      },
+      {
+        "allocation": [
+          0,
+          6,
+          31,
+          32,
+          31
+        ],
+        "rank": 1,
+        "average": 12.0,
+        "baseline_rank": 7510
+      },
+      {
+        "allocation": [
+          0,
+          4,
+          31,
+          31,
+          34
+        ],
+        "rank": 1,
+        "average": 12.0,
+        "baseline_rank": 7581
+      },
+      {
+        "allocation": [
+          0,
+          5,
+          31,
+          32,
+          32
+        ],
+        "rank": 1,
+        "average": 12.0,
+        "baseline_rank": 7729
+      },
+      {
+        "allocation": [
+          0,
+          4,
+          31,
+          32,
+          33
+        ],
+        "rank": 1,
+        "average": 12.0,
+        "baseline_rank": 8681
+      },
+      {
+        "allocation": [
+          0,
+          6,
+          32,
+          31,
+          31
+        ],
+        "rank": 1,
+        "average": 12.0,
+        "baseline_rank": 9387
+      },
+      {
+        "allocation": [
+          1,
+          6,
+          31,
+          31,
+          31
+        ],
+        "rank": 1,
+        "average": 12.0,
+        "baseline_rank": 9425
+      },
+      {
+        "allocation": [
+          0,
+          3,
+          31,
+          31,
+          35
+        ],
+        "rank": 1,
+        "average": 12.0,
+        "baseline_rank": 9605
+      }
+    ],
+    "value_ordered": [
+      {
+        "allocation": [
+          0,
+          4,
+          21,
+          32,
+          43
+        ],
+        "rank": 1,
+        "average": 8.462300858174272,
+        "baseline_rank": 8897
+      },
+      {
+        "allocation": [
+          1,
+          4,
+          21,
+          32,
+          42
+        ],
+        "rank": 2,
+        "average": 8.457253409999783,
+        "baseline_rank": 8937
+      },
+      {
+        "allocation": [
+          0,
+          5,
+          20,
+          31,
+          44
+        ],
+        "rank": 3,
+        "average": 8.451373727329717,
+        "baseline_rank": 9863
+      },
+      {
+        "allocation": [
+          1,
+          5,
+          20,
+          31,
+          43
+        ],
+        "rank": 4,
+        "average": 8.450055122025033,
+        "baseline_rank": 9590
+      },
+      {
+        "allocation": [
+          0,
+          5,
+          20,
+          32,
+          43
+        ],
+        "rank": 5,
+        "average": 8.444986057370139,
+        "baseline_rank": 7654
+      },
+      {
+        "allocation": [
+          0,
+          3,
+          22,
+          33,
+          42
+        ],
+        "rank": 6,
+        "average": 8.44267309396684,
+        "baseline_rank": 9183
+      },
+      {
+        "allocation": [
+          0,
+          5,
+          21,
+          31,
+          43
+        ],
+        "rank": 7,
+        "average": 8.440684377769612,
+        "baseline_rank": 6553
+      },
+      {
+        "allocation": [
+          1,
+          5,
+          20,
+          32,
+          42
+        ],
+        "rank": 8,
+        "average": 8.43993860919565,
+        "baseline_rank": 7693
+      },
+      {
+        "allocation": [
+          0,
+          4,
+          22,
+          31,
+          43
+        ],
+        "rank": 9,
+        "average": 8.43919284062169,
+        "baseline_rank": 7995
+      },
+      {
+        "allocation": [
+          1,
+          5,
+          21,
+          31,
+          42
+        ],
+        "rank": 10,
+        "average": 8.435636929595123,
+        "baseline_rank": 6588
+      }
+    ],
+    "high_value_focus": [
+      {
+        "allocation": [
+          1,
+          14,
+          19,
+          24,
+          42
+        ],
+        "rank": 1,
+        "average": 8.51833350452517,
+        "baseline_rank": 9966
+      },
+      {
+        "allocation": [
+          0,
+          14,
+          19,
+          24,
+          43
+        ],
+        "rank": 2,
+        "average": 8.517608221773319,
+        "baseline_rank": 9925
+      },
+      {
+        "allocation": [
+          1,
+          12,
+          19,
+          25,
+          43
+        ],
+        "rank": 3,
+        "average": 8.515252051448854,
+        "baseline_rank": 9397
+      },
+      {
+        "allocation": [
+          0,
+          12,
+          19,
+          25,
+          44
+        ],
+        "rank": 4,
+        "average": 8.514526768697001,
+        "baseline_rank": 9655
+      },
+      {
+        "allocation": [
+          1,
+          14,
+          18,
+          25,
+          42
+        ],
+        "rank": 5,
+        "average": 8.512932972689196,
+        "baseline_rank": 9287
+      },
+      {
+        "allocation": [
+          2,
+          12,
+          19,
+          25,
+          42
+        ],
+        "rank": 6,
+        "average": 8.512244781502151,
+        "baseline_rank": 9616
+      },
+      {
+        "allocation": [
+          0,
+          14,
+          18,
+          25,
+          43
+        ],
+        "rank": 7,
+        "average": 8.512207689937345,
+        "baseline_rank": 9230
+      },
+      {
+        "allocation": [
+          1,
+          13,
+          19,
+          25,
+          42
+        ],
+        "rank": 8,
+        "average": 8.512182011161707,
+        "baseline_rank": 7347
+      },
+      {
+        "allocation": [
+          1,
+          13,
+          20,
+          24,
+          42
+        ],
+        "rank": 9,
+        "average": 8.512054758562446,
+        "baseline_rank": 8308
+      },
+      {
+        "allocation": [
+          0,
+          13,
+          19,
+          25,
+          43
+        ],
+        "rank": 10,
+        "average": 8.511456728409856,
+        "baseline_rank": 7309
+      }
+    ]
+  },
+  "counters": [
+    {
+      "leader": [
+        0,
+        2,
+        24,
+        34,
+        40
+      ],
+      "leader_shortlist_rank": 1,
+      "leader_baseline_rank": 9163,
+      "best_shortlist_counter": [
+        0,
+        6,
+        18,
+        35,
+        41
+      ],
+      "best_shortlist_counter_points": 11.5,
+      "shortlist_strategies_beating_leader": 929,
+      "best_possible_counter": [
+        1,
+        3,
+        0,
+        35,
+        61
+      ],
+      "best_possible_counter_points": 12.0,
+      "allocations_achieving_best_counter": 10626
+    },
+    {
+      "leader": [
+        0,
+        2,
+        25,
+        33,
+        40
+      ],
+      "leader_shortlist_rank": 2,
+      "leader_baseline_rank": 8583,
+      "best_shortlist_counter": [
+        1,
+        6,
+        18,
+        34,
+        41
+      ],
+      "best_shortlist_counter_points": 12.0,
+      "shortlist_strategies_beating_leader": 945,
+      "best_possible_counter": [
+        1,
+        3,
+        0,
+        34,
+        62
+      ],
+      "best_possible_counter_points": 12.0,
+      "allocations_achieving_best_counter": 12650
+    },
+    {
+      "leader": [
+        1,
+        2,
+        25,
+        33,
+        39
+      ],
+      "leader_shortlist_rank": 3,
+      "leader_baseline_rank": 9541,
+      "best_shortlist_counter": [
+        2,
+        6,
+        18,
+        34,
+        40
+      ],
+      "best_shortlist_counter_points": 12.0,
+      "shortlist_strategies_beating_leader": 1005,
+      "best_possible_counter": [
+        0,
+        0,
+        26,
+        34,
+        40
+      ],
+      "best_possible_counter_points": 12.0,
+      "allocations_achieving_best_counter": 12651
+    },
+    {
+      "leader": [
+        0,
+        2,
+        25,
+        34,
+        39
+      ],
+      "leader_shortlist_rank": 4,
+      "leader_baseline_rank": 8249,
+      "best_shortlist_counter": [
+        1,
+        6,
+        18,
+        35,
+        40
+      ],
+      "best_shortlist_counter_points": 12.0,
+      "shortlist_strategies_beating_leader": 1212,
+      "best_possible_counter": [
+        1,
+        3,
+        0,
+        35,
+        61
+      ],
+      "best_possible_counter_points": 12.0,
+      "allocations_achieving_best_counter": 12650
+    },
+    {
+      "leader": [
+        0,
+        2,
+        24,
+        33,
+        41
+      ],
+      "leader_shortlist_rank": 5,
+      "leader_baseline_rank": 9898,
+      "best_shortlist_counter": [
+        0,
+        6,
+        18,
+        34,
+        42
+      ],
+      "best_shortlist_counter_points": 11.5,
+      "shortlist_strategies_beating_leader": 828,
+      "best_possible_counter": [
+        1,
+        3,
+        0,
+        34,
+        62
+      ],
+      "best_possible_counter_points": 12.0,
+      "allocations_achieving_best_counter": 10626
+    },
+    {
+      "leader": [
+        0,
+        2,
+        24,
+        35,
+        39
+      ],
+      "leader_shortlist_rank": 6,
+      "leader_baseline_rank": 9108,
+      "best_shortlist_counter": [
+        0,
+        6,
+        18,
+        36,
+        40
+      ],
+      "best_shortlist_counter_points": 11.5,
+      "shortlist_strategies_beating_leader": 1212,
+      "best_possible_counter": [
+        1,
+        3,
+        0,
+        36,
+        60
+      ],
+      "best_possible_counter_points": 12.0,
+      "allocations_achieving_best_counter": 10626
+    },
+    {
+      "leader": [
+        0,
+        2,
+        26,
+        33,
+        39
+      ],
+      "leader_shortlist_rank": 7,
+      "leader_baseline_rank": 7903,
+      "best_shortlist_counter": [
+        1,
+        6,
+        19,
+        34,
+        40
+      ],
+      "best_shortlist_counter_points": 12.0,
+      "shortlist_strategies_beating_leader": 1213,
+      "best_possible_counter": [
+        1,
+        3,
+        0,
+        34,
+        62
+      ],
+      "best_possible_counter_points": 12.0,
+      "allocations_achieving_best_counter": 14950
+    },
+    {
+      "leader": [
+        0,
+        2,
+        25,
+        32,
+        41
+      ],
+      "leader_shortlist_rank": 8,
+      "leader_baseline_rank": 9572,
+      "best_shortlist_counter": [
+        1,
+        6,
+        18,
+        33,
+        42
+      ],
+      "best_shortlist_counter_points": 12.0,
+      "shortlist_strategies_beating_leader": 850,
+      "best_possible_counter": [
+        1,
+        3,
+        0,
+        33,
+        63
+      ],
+      "best_possible_counter_points": 12.0,
+      "allocations_achieving_best_counter": 12650
+    },
+    {
+      "leader": [
+        0,
+        2,
+        26,
+        32,
+        40
+      ],
+      "leader_shortlist_rank": 9,
+      "leader_baseline_rank": 8580,
+      "best_shortlist_counter": [
+        1,
+        6,
+        19,
+        33,
+        41
+      ],
+      "best_shortlist_counter_points": 12.0,
+      "shortlist_strategies_beating_leader": 954,
+      "best_possible_counter": [
+        1,
+        3,
+        0,
+        33,
+        63
+      ],
+      "best_possible_counter_points": 12.0,
+      "allocations_achieving_best_counter": 14950
+    },
+    {
+      "leader": [
+        1,
+        2,
+        25,
+        34,
+        38
+      ],
+      "leader_shortlist_rank": 10,
+      "leader_baseline_rank": 9507,
+      "best_shortlist_counter": [
+        2,
+        6,
+        18,
+        35,
+        39
+      ],
+      "best_shortlist_counter_points": 12.0,
+      "shortlist_strategies_beating_leader": 1266,
+      "best_possible_counter": [
+        0,
+        0,
+        26,
+        35,
+        39
+      ],
+      "best_possible_counter_points": 12.0,
+      "allocations_achieving_best_counter": 12651
+    }
+  ],
+  "runtime_seconds": 3.902,
+  "note": "Scores depend on the opponent pool; no single pool identifies a universal winner."
+}

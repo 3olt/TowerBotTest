@@ -1,0 +1,165 @@
+{
+  "game": {
+    "name": "Game 1: Head to Head",
+    "soldiers": 100,
+    "castle_values": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "points_per_matchup": 15,
+    "tie_rule": "tied castle points are split equally",
+    "zero_soldiers_allowed": true
+  },
+  "opponent_pool": {
+    "name": "all_legal_allocations",
+    "definition": "every legal allocation exactly once, equally weighted; each strategy's own entry excluded",
+    "size": 4598126,
+    "opponents_per_strategy": 4598125
+  },
+  "evaluated": 4598126,
+  "selection": {
+    "mode": "top_k",
+    "top_k": 10000,
+    "top_percent": null,
+    "min_average": null,
+    "effective_k": 10000,
+    "cutoff_ties_kept": true,
+    "tie_display_order": "castle allocation ascending (does not indicate a better strategy)"
+  },
+  "shortlist_size": 10000,
+  "cutoff_score_key": 89679307,
+  "cutoff_average": 9.751724017942095,
+  "highest_score_key": 90904115,
+  "highest_average": 9.884909609895338,
+  "population_mean_average": 7.5,
+  "top_strategies": [
+    {
+      "allocation": [
+        0,
+        12,
+        23,
+        30,
+        35
+      ],
+      "rank": 1,
+      "average": 9.884909609895338,
+      "score_key": 90904115
+    },
+    {
+      "allocation": [
+        0,
+        11,
+        23,
+        30,
+        36
+      ],
+      "rank": 2,
+      "average": 9.884471931493815,
+      "score_key": 90900090
+    },
+    {
+      "allocation": [
+        0,
+        11,
+        23,
+        31,
+        35
+      ],
+      "rank": 3,
+      "average": 9.884171700421367,
+      "score_key": 90897329
+    },
+    {
+      "allocation": [
+        0,
+        11,
+        24,
+        30,
+        35
+      ],
+      "rank": 4,
+      "average": 9.883777300530108,
+      "score_key": 90893702
+    },
+    {
+      "allocation": [
+        0,
+        12,
+        22,
+        30,
+        36
+      ],
+      "rank": 5,
+      "average": 9.883568302297132,
+      "score_key": 90891780
+    },
+    {
+      "allocation": [
+        0,
+        12,
+        22,
+        31,
+        35
+      ],
+      "rank": 6,
+      "average": 9.883268071224684,
+      "score_key": 90889019
+    },
+    {
+      "allocation": [
+        0,
+        12,
+        23,
+        29,
+        36
+      ],
+      "rank": 7,
+      "average": 9.882955008835124,
+      "score_key": 90886140
+    },
+    {
+      "allocation": [
+        0,
+        11,
+        22,
+        31,
+        36
+      ],
+      "rank": 8,
+      "average": 9.882830392823161,
+      "score_key": 90884994
+    },
+    {
+      "allocation": [
+        0,
+        12,
+        24,
+        29,
+        35
+      ],
+      "rank": 9,
+      "average": 9.882260377871415,
+      "score_key": 90879752
+    },
+    {
+      "allocation": [
+        0,
+        13,
+        22,
+        30,
+        35
+      ],
+      "rank": 10,
+      "average": 9.88224439309501,
+      "score_key": 90879605
+    }
+  ],
+  "runtime_seconds": 0.373,
+  "timings": {
+    "pass1_seconds": 0.206,
+    "pass2_seconds": 0.144
+  }
+}
