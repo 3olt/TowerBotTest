@@ -225,5 +225,27 @@ def test_analysis_runs_and_scores_match_direct(tmp_path):
     for r, s in zip(rows, survivors):
         direct = sum(head_to_head(game, s, o)[0] for o in survivors if o != s) / (len(survivors) - 1)
         assert float(r["shortlist_average"]) == pytest.approx(direct, abs=1e-9)
-    for name in ("shortlist_reranked.csv", "counters.csv", "analysis_summary.json"):
+    for name in ("shortlist_reranked.csv", "counters.csv", "pool_search.csv", "analysis_summary.json"):
         assert (tmp_path / name).exists()
+
+
+def test_full_search_finds_best_reply_outside_shortlist(tmp_path):
+    game = Game(12, DEFAULT_GAME.values)
+    baseline.main(["--soldiers", "12", "--top-k", "20", "--output-dir", str(tmp_path)])
+    sl = analysis.load_shortlist(tmp_path / "shortlist.csv", game)
+    allocs = all_allocations(game)
+    stacked = allocs[allocs[:, 3:].sum(axis=1) >= 10]
+    pool = analysis.explicit_pool(game, "stacked", "", stacked, np.ones(len(stacked), dtype=np.int64), exclude_self=True)
+    rows, summary = analysis.full_search(game, [pool], sl["allocs"], top_n=5)
+    s = summary["stacked"]
+    # Brute force: the best average over all allocations against the stacked pool, excluding self.
+    def direct(a):
+        opp = [b for b in stacked.tolist() if b != a]
+        return sum(head_to_head(game, a, b)[0] for b in opp) / len(opp)
+    best = max(direct(a) for a in allocs.tolist())
+    assert s["best_average"] == pytest.approx(best, abs=1e-9)
+    assert s["best_shortlist_average"] == pytest.approx(max(direct(a) for a in sl["allocs"].tolist()), abs=1e-9)
+    assert s["shortlist_gap"] >= 0
+    assert [r["pool_rank"] for r in rows] == sorted(r["pool_rank"] for r in rows) and rows[0]["pool_rank"] == 1
+    member = {tuple(a) for a in sl["allocs"].tolist()}
+    assert all(r["in_shortlist"] == ((r["a1"], r["a2"], r["a3"], r["a4"], r["a5"]) in member) for r in rows)

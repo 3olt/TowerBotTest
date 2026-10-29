@@ -1,0 +1,325 @@
+{
+  "method": "regret matching+ self-play over every legal allocation, linear averaging",
+  "iterations": 2000,
+  "exploitability": 0.01164577921595722,
+  "meaning": "no pure allocation scores more than 7.5 + exploitability against this field",
+  "history": [
+    {
+      "iteration": 100,
+      "exploitability": 0.11841854998861479,
+      "seconds": 24.6
+    },
+    {
+      "iteration": 200,
+      "exploitability": 0.06495749982866883,
+      "seconds": 48.4
+    },
+    {
+      "iteration": 300,
+      "exploitability": 0.047589363241075766,
+      "seconds": 73.2
+    },
+    {
+      "iteration": 400,
+      "exploitability": 0.04743076597472751,
+      "seconds": 98.3
+    },
+    {
+      "iteration": 500,
+      "exploitability": 0.04084141205727576,
+      "seconds": 123.3
+    },
+    {
+      "iteration": 600,
+      "exploitability": 0.03353800100305193,
+      "seconds": 148.7
+    },
+    {
+      "iteration": 700,
+      "exploitability": 0.02691694351060292,
+      "seconds": 175.0
+    },
+    {
+      "iteration": 800,
+      "exploitability": 0.02676824558587132,
+      "seconds": 200.7
+    },
+    {
+      "iteration": 900,
+      "exploitability": 0.02443312853603441,
+      "seconds": 226.2
+    },
+    {
+      "iteration": 1000,
+      "exploitability": 0.021636098844748375,
+      "seconds": 249.2
+    },
+    {
+      "iteration": 1100,
+      "exploitability": 0.018739617131187103,
+      "seconds": 272.1
+    },
+    {
+      "iteration": 1200,
+      "exploitability": 0.01732353010619203,
+      "seconds": 295.2
+    },
+    {
+      "iteration": 1300,
+      "exploitability": 0.016455379315346796,
+      "seconds": 318.6
+    },
+    {
+      "iteration": 1400,
+      "exploitability": 0.01562092681107341,
+      "seconds": 343.2
+    },
+    {
+      "iteration": 1500,
+      "exploitability": 0.015136273103763642,
+      "seconds": 367.5
+    },
+    {
+      "iteration": 1600,
+      "exploitability": 0.01496238612876244,
+      "seconds": 390.6
+    },
+    {
+      "iteration": 1700,
+      "exploitability": 0.014696216144404417,
+      "seconds": 413.6
+    },
+    {
+      "iteration": 1800,
+      "exploitability": 0.013897025160488852,
+      "seconds": 436.5
+    },
+    {
+      "iteration": 1900,
+      "exploitability": 0.012925674478676541,
+      "seconds": 459.7
+    },
+    {
+      "iteration": 2000,
+      "exploitability": 0.011645779216997276,
+      "seconds": 483.6
+    }
+  ],
+  "support_size_at_threshold": 468058,
+  "support_threshold": 1e-06,
+  "probability_mass_in_top_1000": 0.004238776792329813,
+  "expected_soldiers_per_castle": [
+    6.34,
+    13.17,
+    20.0,
+    26.82,
+    33.68
+  ],
+  "baseline_leader": {
+    "allocation": [
+      0,
+      12,
+      23,
+      30,
+      35
+    ],
+    "points_vs_equilibrium": 7.500746200429625
+  },
+  "best_vs_equilibrium": [
+    {
+      "allocation": [
+        10,
+        21,
+        2,
+        0,
+        67
+      ],
+      "points_vs_equilibrium": 7.511645779215957,
+      "probability": 4.519306638018236e-06,
+      "points_vs_uniform": 6.861635449232024,
+      "points_vs_strong_field": 7.995900000000001
+    },
+    {
+      "allocation": [
+        10,
+        2,
+        37,
+        51,
+        0
+      ],
+      "points_vs_equilibrium": 7.511596603481981,
+      "probability": 4.104291868120476e-06,
+      "points_vs_uniform": 6.904632214217751,
+      "points_vs_strong_field": 8.0034
+    },
+    {
+      "allocation": [
+        10,
+        26,
+        11,
+        53,
+        0
+      ],
+      "points_vs_equilibrium": 7.511572023795874,
+      "probability": 4.240519832471168e-06,
+      "points_vs_uniform": 6.769678292782384,
+      "points_vs_strong_field": 7.0
+    },
+    {
+      "allocation": [
+        10,
+        21,
+        1,
+        1,
+        67
+      ],
+      "points_vs_equilibrium": 7.511559910045317,
+      "probability": 4.493036385608964e-06,
+      "points_vs_uniform": 6.902864645915455,
+      "points_vs_strong_field": 7.995900000000001
+    },
+    {
+      "allocation": [
+        10,
+        0,
+        37,
+        53,
+        0
+      ],
+      "points_vs_equilibrium": 7.511486090878685,
+      "probability": 4.747454119922468e-06,
+      "points_vs_uniform": 6.791498926192742,
+      "points_vs_strong_field": 8.0
+    },
+    {
+      "allocation": [
+        10,
+        21,
+        0,
+        2,
+        67
+      ],
+      "points_vs_equilibrium": 7.511469617952195,
+      "probability": 4.473295405091683e-06,
+      "points_vs_uniform": 6.936329047165964,
+      "points_vs_strong_field": 7.995900000000001
+    },
+    {
+      "allocation": [
+        10,
+        26,
+        10,
+        53,
+        1
+      ],
+      "points_vs_equilibrium": 7.511280524264225,
+      "probability": 4.066078222862029e-06,
+      "points_vs_uniform": 6.875886475465543,
+      "points_vs_strong_field": 7.0
+    },
+    {
+      "allocation": [
+        10,
+        26,
+        13,
+        51,
+        0
+      ],
+      "points_vs_equilibrium": 7.511233282511858,
+      "probability": 3.390512658352678e-06,
+      "points_vs_uniform": 6.891977055865162,
+      "points_vs_strong_field": 7.0
+    },
+    {
+      "allocation": [
+        10,
+        1,
+        37,
+        51,
+        1
+      ],
+      "points_vs_equilibrium": 7.51118033528025,
+      "probability": 3.915225063901875e-06,
+      "points_vs_uniform": 7.020555008835123,
+      "points_vs_strong_field": 8.0
+    },
+    {
+      "allocation": [
+        10,
+        26,
+        12,
+        51,
+        1
+      ],
+      "points_vs_equilibrium": 7.511131430507135,
+      "probability": 3.214345034303098e-06,
+      "points_vs_uniform": 7.003529047165965,
+      "points_vs_strong_field": 7.0
+    },
+    {
+      "allocation": [
+        10,
+        4,
+        35,
+        51,
+        0
+      ],
+      "points_vs_equilibrium": 7.511056826019264,
+      "probability": 3.7074100918374803e-06,
+      "points_vs_uniform": 6.982787984232703,
+      "points_vs_strong_field": 8.066299999999998
+    },
+    {
+      "allocation": [
+        10,
+        18,
+        3,
+        2,
+        67
+      ],
+      "points_vs_equilibrium": 7.511056158221799,
+      "probability": 4.300002165119585e-06,
+      "points_vs_uniform": 7.145374364550768,
+      "points_vs_strong_field": 7.9030000000000005
+    },
+    {
+      "allocation": [
+        10,
+        18,
+        4,
+        1,
+        67
+      ],
+      "points_vs_equilibrium": 7.511055944683797,
+      "probability": 4.3243612428866515e-06,
+      "points_vs_uniform": 7.102122713062389,
+      "points_vs_strong_field": 7.9030000000000005
+    },
+    {
+      "allocation": [
+        10,
+        18,
+        2,
+        3,
+        67
+      ],
+      "points_vs_equilibrium": 7.511010002487516,
+      "probability": 4.282241070546801e-06,
+      "points_vs_uniform": 7.181079135517194,
+      "points_vs_strong_field": 7.9030000000000005
+    },
+    {
+      "allocation": [
+        10,
+        18,
+        5,
+        0,
+        67
+      ],
+      "points_vs_equilibrium": 7.5110073881084265,
+      "probability": 4.356210112021675e-06,
+      "points_vs_uniform": 7.051301019437271,
+      "points_vs_strong_field": 7.9030000000000005
+    }
+  ]
+}

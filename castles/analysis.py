@@ -19,8 +19,8 @@ from typing import Callable
 
 import numpy as np
 
-from .game import Game, doubled_points_vs, iter_allocation_batches, validate_allocation
-from .scoring import average_points, histograms_from_batches, q_tables, score_keys
+from .game import Game, all_allocations, doubled_points_vs, iter_allocation_batches, validate_allocation
+from .scoring import average_points, baseline_histograms, histograms_from_batches, q_tables, score_keys
 
 Predicate = Callable[[np.ndarray], np.ndarray]
 
@@ -47,11 +47,25 @@ def _high_value(allocs: np.ndarray) -> np.ndarray:
     return allocs[:, -2:].sum(axis=1) >= 60
 
 
+def _stack_top_two(allocs: np.ndarray) -> np.ndarray:
+    return allocs[:, -2:].sum(axis=1) >= 90
+
+
 FILTER_POOLS: list[tuple[str, str, Predicate]] = [
     ("balanced", "legal allocations with every castle between 10 and 30 soldiers", _balanced),
     ("value_ordered", "legal allocations with soldiers non-decreasing in castle value (a1 <= ... <= a5)", _value_ordered),
     ("high_value_focus", "legal allocations sending at least 60 soldiers to the two most valuable castles", _high_value),
+    ("stack_top_two", "legal allocations sending at least 90 soldiers to the two most valuable castles, e.g. (0, 0, 0, 50, 50)",
+     _stack_top_two),
 ]
+
+
+def allocation_codes(game: Game, allocs: np.ndarray) -> np.ndarray:
+    """Encode each allocation as one integer so membership tests are vectorized."""
+    codes = np.zeros(len(allocs), dtype=np.int64)
+    for c in range(game.castles):
+        codes = codes * (game.soldiers + 1) + allocs[:, c]
+    return codes
 
 
 def filter_pool(game: Game, name: str, definition: str, predicate: Predicate) -> Pool:
@@ -65,12 +79,12 @@ def filter_pool(game: Game, name: str, definition: str, predicate: Predicate) ->
 def explicit_pool(game: Game, name: str, definition: str, allocs: np.ndarray, counts: np.ndarray,
                   exclude_self: bool) -> Pool:
     hist = histograms_from_batches(game, [allocs], [counts])
-    lookup = {tuple(r): int(c) for r, c in zip(allocs.tolist(), counts.tolist())}
+    member_codes = allocation_codes(game, allocs[counts > 0])
 
     def self_count(a: np.ndarray) -> np.ndarray:
         if not exclude_self:
             return np.zeros(len(a), dtype=np.int64)
-        return np.array([min(lookup.get(tuple(r), 0), 1) for r in a.tolist()], dtype=np.int64)
+        return np.isin(allocation_codes(game, a), member_codes).astype(np.int64)
 
     return Pool(name, definition, hist, int(counts.sum()), self_count)
 
@@ -115,6 +129,39 @@ def best_responses(game: Game, leader: tuple[int, ...]) -> tuple[int, int, tuple
     return best, count, example
 
 
+def full_search(game: Game, pools: list[Pool], shortlist_allocs: np.ndarray, top_n: int) -> tuple[list[dict], dict]:
+    """Score every legal allocation against each pool, so the best reply is not limited to
+    the baseline shortlist. Shortlist membership and baseline results are kept for comparison."""
+    allocs = all_allocations(game)  # lexicographic, so a stable sort orders exact ties by allocation
+    n = game.num_allocations
+    keys = score_keys(game, q_tables(baseline_histograms(game)), allocs)
+    base_avg = average_points(game, keys, n)
+    base_rank = 1 + np.searchsorted(np.sort(-keys), -keys, side="left")
+    in_shortlist = np.isin(allocation_codes(game, allocs), allocation_codes(game, shortlist_allocs))
+
+    rows, summary = [], {}
+    for pool in pools:
+        avg = average_points(game, score_keys(game, q_tables(pool.hist), allocs), pool.size, pool.self_count(allocs))
+        order = np.argsort(-avg, kind="stable")
+        sorted_neg = -avg[order]
+        rank_of = lambda i: int(np.searchsorted(sorted_neg, -avg[i], side="left")) + 1
+        for i in order[:top_n].tolist():
+            rows.append({"pool": pool.name, "pool_rank": rank_of(i), **{f"a{c + 1}": int(x) for c, x in enumerate(allocs[i])},
+                         "pool_average": f"{avg[i]:.12f}", "baseline_rank": int(base_rank[i]),
+                         "baseline_average": f"{base_avg[i]:.12f}", "in_shortlist": bool(in_shortlist[i])})
+        best = int(order[0])
+        sl_best = int(order[np.flatnonzero(in_shortlist[order])[0]])
+        summary[pool.name] = {
+            "best_allocation": allocs[best].tolist(), "best_average": float(avg[best]),
+            "best_baseline_rank": int(base_rank[best]), "best_in_shortlist": bool(in_shortlist[best]),
+            "best_shortlist_allocation": allocs[sl_best].tolist(), "best_shortlist_average": float(avg[sl_best]),
+            "best_shortlist_rank_among_all": rank_of(sl_best),
+            "shortlist_gap": float(avg[best] - avg[sl_best]),
+            f"top_{top_n}_in_shortlist": int(in_shortlist[order[:top_n]].sum()),
+        }
+    return rows, summary
+
+
 def load_shortlist(path: Path, game: Game) -> dict[str, np.ndarray]:
     with path.open(newline="") as f:
         rows = list(csv.DictReader(f))
@@ -133,6 +180,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--leaders", type=int, default=10, help="leaders to inspect head to head")
     p.add_argument("--applicants", type=Path, help="CSV of actual applicant choices to use as an extra pool")
     p.add_argument("--show", type=int, default=10)
+    p.add_argument("--search-top", type=int, default=100,
+                   help="best allocations per pool to export from the search over all allocations")
     return p.parse_args(argv)
 
 
@@ -156,8 +205,8 @@ def main(argv: list[str] | None = None) -> None:
         a_allocs, a_counts = load_applicants(game, args.applicants)
         pools.append(explicit_pool(game, "applicants", f"actual applicant choices from {args.applicants}",
                                    a_allocs, a_counts, exclude_self=False))
-    # A filter pool can be empty or self-only in small games; it has no opponents to score against.
-    skipped = [p.name for p in pools if p.size - int(p.self_count(allocs).max()) < 1]
+    # A filter pool can be empty or a single allocation in small games, leaving its member no opponents.
+    skipped = [p.name for p in pools if p.size < 2]
     pools = [p for p in pools if p.name not in skipped]
     for name in skipped:
         print(f"Skipping pool '{name}': it has no opponents for some survivors in this game.")
@@ -208,6 +257,13 @@ def main(argv: list[str] | None = None) -> None:
         for c in counters:
             w.writerow({k: (" ".join(map(str, v)) if isinstance(v, tuple) else v) for k, v in c.items()})
 
+    # 4b. Search every legal allocation against each pool, keeping the shortlist for comparison.
+    search_rows, search_summary = full_search(game, pools, allocs, args.search_top)
+    with (out / "pool_search.csv").open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(search_rows[0]))
+        w.writeheader()
+        w.writerows(search_rows)
+
     def top_of(name: str, n: int = 10) -> list[dict]:
         idx = np.lexsort((sl["baseline_rank"], ranks[name]))[:n]
         return [{"allocation": allocs[i].tolist(), "rank": int(ranks[name][i]), "average": float(scores[name][i]),
@@ -219,6 +275,7 @@ def main(argv: list[str] | None = None) -> None:
         "pools": [{"name": p.name, "definition": p.definition, "size": p.size} for p in pools],
         "rank_correlation_vs_baseline": {p.name: spearman(-sl["baseline_average"], -scores[p.name]) for p in pools},
         "top_by_pool": {p.name: top_of(p.name) for p in pools},
+        "full_search": search_summary,
         "counters": [{k: (list(v) if isinstance(v, tuple) else v) for k, v in c.items()} for c in counters],
         "runtime_seconds": round(time.perf_counter() - start, 3),
         "note": "Scores depend on the opponent pool; no single pool identifies a universal winner.",
@@ -237,7 +294,13 @@ def main(argv: list[str] | None = None) -> None:
         print(f"  {str(c['leader']):<22} best shortlist counter {str(c['best_shortlist_counter']):<22} "
               f"{c['best_shortlist_counter_points']:>4} pts; best possible {str(c['best_possible_counter']):<22} "
               f"{c['best_possible_counter_points']} pts")
-    print(f"\nRuntime {summary['runtime_seconds']}s. Wrote shortlist_reranked.csv, counters.csv, analysis_summary.json in {out}.")
+    print("\nBest allocation against each pool, searching all allocations (vs best inside the shortlist):")
+    for name, s in search_summary.items():
+        print(f"  {name:<17} {str(tuple(s['best_allocation'])):<22} {s['best_average']:>8.4f} (baseline #{s['best_baseline_rank']:,})"
+              f" | shortlist best {str(tuple(s['best_shortlist_allocation'])):<22} {s['best_shortlist_average']:>8.4f}"
+              f" (#{s['best_shortlist_rank_among_all']:,} overall)")
+    print(f"\nRuntime {summary['runtime_seconds']}s. Wrote shortlist_reranked.csv, counters.csv, pool_search.csv, "
+          f"analysis_summary.json in {out}.")
 
 
 if __name__ == "__main__":

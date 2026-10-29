@@ -24,13 +24,19 @@
       "name": "high_value_focus",
       "definition": "legal allocations sending at least 60 soldiers to the two most valuable castles",
       "size": 876211
+    },
+    {
+      "name": "stack_top_two",
+      "definition": "legal allocations sending at least 90 soldiers to the two most valuable castles, e.g. (0, 0, 0, 50, 50)",
+      "size": 26741
     }
   ],
   "rank_correlation_vs_baseline": {
     "shortlist": 0.09240922347609223,
     "balanced": 0.1934627605346276,
     "value_ordered": 0.22472638868726388,
-    "high_value_focus": 0.1301699707976997
+    "high_value_focus": 0.1301699707976997,
+    "stack_top_two": -0.15788566288285666
   },
   "top_by_pool": {
     "shortlist": [
@@ -520,7 +526,246 @@
         "average": 8.511456728409856,
         "baseline_rank": 7309
       }
+    ],
+    "stack_top_two": [
+      {
+        "allocation": [
+          4,
+          9,
+          17,
+          31,
+          39
+        ],
+        "rank": 1,
+        "average": 9.200964810590479,
+        "baseline_rank": 9408
+      },
+      {
+        "allocation": [
+          4,
+          9,
+          17,
+          32,
+          38
+        ],
+        "rank": 2,
+        "average": 9.190269623424703,
+        "baseline_rank": 8750
+      },
+      {
+        "allocation": [
+          5,
+          9,
+          18,
+          30,
+          38
+        ],
+        "rank": 3,
+        "average": 9.189783478553531,
+        "baseline_rank": 9443
+      },
+      {
+        "allocation": [
+          4,
+          8,
+          18,
+          30,
+          40
+        ],
+        "rank": 4,
+        "average": 9.180845892075839,
+        "baseline_rank": 9786
+      },
+      {
+        "allocation": [
+          4,
+          9,
+          17,
+          33,
+          37
+        ],
+        "rank": 5,
+        "average": 9.179574436258928,
+        "baseline_rank": 8747
+      },
+      {
+        "allocation": [
+          5,
+          9,
+          18,
+          31,
+          37
+        ],
+        "rank": 6,
+        "average": 9.179088291387757,
+        "baseline_rank": 8783
+      },
+      {
+        "allocation": [
+          3,
+          9,
+          16,
+          33,
+          39
+        ],
+        "rank": 7,
+        "average": 9.175012153621779,
+        "baseline_rank": 9926
+      },
+      {
+        "allocation": [
+          4,
+          10,
+          17,
+          30,
+          39
+        ],
+        "rank": 8,
+        "average": 9.171833514079504,
+        "baseline_rank": 8753
+      },
+      {
+        "allocation": [
+          4,
+          8,
+          18,
+          31,
+          39
+        ],
+        "rank": 9,
+        "average": 9.170150704910062,
+        "baseline_rank": 8457
+      },
+      {
+        "allocation": [
+          4,
+          9,
+          18,
+          29,
+          40
+        ],
+        "rank": 10,
+        "average": 9.168879249093154,
+        "baseline_rank": 9143
+      }
     ]
+  },
+  "full_search": {
+    "shortlist": {
+      "best_allocation": [
+        4,
+        16,
+        0,
+        37,
+        43
+      ],
+      "best_average": 11.479,
+      "best_baseline_rank": 460183,
+      "best_in_shortlist": false,
+      "best_shortlist_allocation": [
+        0,
+        2,
+        24,
+        34,
+        40
+      ],
+      "best_shortlist_average": 9.927642764276428,
+      "best_shortlist_rank_among_all": 24062,
+      "shortlist_gap": 1.5513572357235716,
+      "top_100_in_shortlist": 0
+    },
+    "balanced": {
+      "best_allocation": [
+        0,
+        0,
+        31,
+        31,
+        38
+      ],
+      "best_average": 12.0,
+      "best_baseline_rank": 24277,
+      "best_in_shortlist": false,
+      "best_shortlist_allocation": [
+        0,
+        3,
+        31,
+        31,
+        35
+      ],
+      "best_shortlist_average": 12.0,
+      "best_shortlist_rank_among_all": 1,
+      "shortlist_gap": 0.0,
+      "top_100_in_shortlist": 1
+    },
+    "value_ordered": {
+      "best_allocation": [
+        11,
+        19,
+        28,
+        42,
+        0
+      ],
+      "best_average": 9.836982836885564,
+      "best_baseline_rank": 2715342,
+      "best_in_shortlist": false,
+      "best_shortlist_allocation": [
+        0,
+        4,
+        21,
+        32,
+        43
+      ],
+      "best_shortlist_average": 8.462300858174272,
+      "best_shortlist_rank_among_all": 159767,
+      "shortlist_gap": 1.3746819787112923,
+      "top_100_in_shortlist": 0
+    },
+    "high_value_focus": {
+      "best_allocation": [
+        4,
+        14,
+        19,
+        0,
+        63
+      ],
+      "best_average": 8.81507287065886,
+      "best_baseline_rank": 2131761,
+      "best_in_shortlist": false,
+      "best_shortlist_allocation": [
+        1,
+        14,
+        19,
+        24,
+        42
+      ],
+      "best_shortlist_average": 8.51833350452517,
+      "best_shortlist_rank_among_all": 41422,
+      "shortlist_gap": 0.29673936613368923,
+      "top_100_in_shortlist": 0
+    },
+    "stack_top_two": {
+      "best_allocation": [
+        6,
+        8,
+        8,
+        0,
+        78
+      ],
+      "best_average": 10.005067125387981,
+      "best_baseline_rank": 3396179,
+      "best_in_shortlist": false,
+      "best_shortlist_allocation": [
+        4,
+        9,
+        17,
+        31,
+        39
+      ],
+      "best_shortlist_average": 9.200964810590479,
+      "best_shortlist_rank_among_all": 103695,
+      "shortlist_gap": 0.8041023147975022,
+      "top_100_in_shortlist": 0
+    }
   },
   "counters": [
     {
@@ -814,6 +1059,6 @@
       "allocations_achieving_best_counter": 12651
     }
   ],
-  "runtime_seconds": 3.45,
+  "runtime_seconds": 19.97,
   "note": "Scores depend on the opponent pool; no single pool identifies a universal winner."
 }

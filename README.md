@@ -15,6 +15,7 @@ python -m castles.baseline --min-average 9.8  # or a minimum-average cutoff
 python -m castles.baseline --full-ranking     # also export all 4,598,126 strategies (large)
 python -m castles.analysis                    # phase 5: shortlist re-ranking, extra pools, counters
 python -m castles.analysis --applicants choices.csv   # add real applicant choices (columns a1..a5, optional count)
+python -m castles.equilibrium                 # optimal play: approximate the Nash equilibrium over all allocations
 python -m pytest                              # validation suite (implementation and validation order below)
 ```
 
@@ -25,9 +26,10 @@ python -m pytest                              # validation suite (implementation
 | `castles/game.py` | Game parameters, input validation, batched lexicographic allocation generator, direct head-to-head scoring |
 | `castles/scoring.py` | Histograms (closed form or from any pool), `q` tables, integer score keys `Z`, exact averages |
 | `castles/baseline.py` | Two-pass top-k / percentile / minimum-average selection keeping cutoff ties, CSV/JSON export, terminal summary |
-| `castles/analysis.py` | Phase 5: survivors vs survivors, `balanced` / `value_ordered` / `high_value_focus` / applicant pools, rank comparison, counter search |
+| `castles/analysis.py` | Phase 5: survivors vs survivors, `balanced` / `value_ordered` / `high_value_focus` / `stack_top_two` / applicant pools, rank comparison, counter search, search over all allocations against each pool |
+| `castles/equilibrium.py` | Regret-matching+ self-play over all allocations to approximate optimal (equilibrium) play, with exact exploitability |
 
-Phase 5 writes `outputs/shortlist_reranked.csv` (baseline score and rank kept next to each pool's score and rank), `outputs/counters.csv` (for each leader, the best counter inside the shortlist and the best counter among all legal allocations), and `outputs/analysis_summary.json` (pool definitions and sizes, Spearman rank correlation with the baseline, top strategies per pool). Filter pools exclude a strategy's own entry when it belongs to the pool. Applicant pools do not, since a submission really does face every applicant.
+Phase 5 writes `outputs/shortlist_reranked.csv` (baseline score and rank kept next to each pool's score and rank), `outputs/counters.csv` (for each leader, the best counter inside the shortlist and the best counter among all legal allocations), `outputs/pool_search.csv` (the top 100 allocations overall against each pool, with baseline rank and shortlist membership), and `outputs/analysis_summary.json` (pool definitions and sizes, Spearman rank correlation with the baseline, top strategies per pool). Filter pools exclude a strategy's own entry when it belongs to the pool. Applicant pools do not, since a submission really does face every applicant.
 
 ## Findings
 
@@ -48,25 +50,64 @@ The full baseline runs in about 0.4 s. All 4,598,126 allocations are scored exac
 - The leaders gain about 2.4 points per matchup over the 7.5 population mean.
 - The top-10,000 cutoff is 9.7517, with no ties at the cutoff, so the shortlist has exactly 10,000 strategies.
 
-### Shortlist analysis: other opponent pools
+The baseline leader is only the best reply to a field where every legal allocation is equally likely. That assumption is not realistic for a competitive field, so this result says nothing about safety against other fields.
 
-| Opponent pool | Leader | Average | Baseline rank |
-| --- | --- | --- | --- |
-| Shortlist (survivors vs survivors) | `(0, 2, 24, 34, 40)` | 9.93 | #9163 |
-| Balanced (each castle 10–30) | `(0, 6, 31, 31, 32)`, tied with several others | 12.00 | #5802 |
-| Value-ordered (a1 ≤ … ≤ a5) | `(0, 4, 21, 32, 43)` | 8.46 | #8897 |
-| High-value focus (a4 + a5 ≥ 60) | `(1, 14, 19, 24, 42)` | 8.52 | #9966 |
+### Search over all allocations against each opponent pool
 
-- Rankings depend strongly on the pool. Within the shortlist, rank correlation with the baseline is only 0.09–0.23.
-- Against strong opponents (the shortlist itself), the best play nearly gives up castle 2 (about 2 soldiers) and moves the extra soldiers to castles 4 and 5.
-- Against balanced opponents, about 31 on each of castles 3, 4 and 5 wins almost every time.
-- Every leader can be countered. Some legal allocation takes 12 of 15 points from each shortlist leader, usually by leaving castle 3 empty and stacking castle 5, for example `(1, 3, 0, 35, 61)`. See `outputs/counters.csv`.
+Each pool's best reply is found by scoring all 4,598,126 allocations against it, so it is not limited to the baseline shortlist. The shortlist's best is kept for comparison (`outputs/pool_search.csv`, `full_search` in `outputs/analysis_summary.json`).
+
+| Opponent pool | Best allocation overall | Average | Baseline rank | Best in shortlist | Average |
+| --- | --- | --- | --- | --- | --- |
+| Shortlist (the 10,000 baseline leaders) | `(4, 16, 0, 37, 43)` | 11.48 | #460,183 | `(0, 2, 24, 34, 40)` | 9.93 |
+| Balanced (each castle 10–30) | `(0, 0, 31, 31, 38)`, tied with many others | 12.00 | #24,277 | `(0, 3, 31, 31, 35)`, tied | 12.00 |
+| Value-ordered (a1 ≤ … ≤ a5) | `(11, 19, 28, 42, 0)` | 9.84 | #2,715,342 | `(0, 4, 21, 32, 43)` | 8.46 |
+| High-value focus (a4 + a5 ≥ 60) | `(4, 14, 19, 0, 63)` | 8.82 | #2,131,761 | `(1, 14, 19, 24, 42)` | 8.52 |
+| Stack top two (a4 + a5 ≥ 90) | `(6, 8, 8, 0, 78)` | 10.01 | #3,396,179 | `(4, 9, 17, 31, 39)` | 9.20 |
+
+- In four of the five pools, the best reply is far outside the baseline shortlist. Filtering on the uniform baseline removed the best replies to those fields.
+- The best replies usually give up one valuable castle entirely and win the others narrowly. Against the shortlist, `(4, 16, 0, 37, 43)` gives up castle 3. Against the stacked and high-value pools, the best replies give up castle 4.
+- Against value-ordered opponents, giving up castle 5 entirely is best, because those opponents send the most soldiers there.
+- Rankings within the shortlist barely agree across pools: rank correlation with the baseline is only 0.09–0.23.
+
+### Head-to-head examples
+
+- `(0, 0, 0, 50, 50)` beats the baseline leader `(0, 12, 23, 30, 35)` 9.5–5.5, and beats the shortlist leader `(0, 2, 24, 34, 40)` by the same score.
+- `(0, 0, 0, 50, 50)` is itself countered 11–4 by `(1, 1, 1, 0, 97)`.
+- Over whole pools the ranking changes. Against the balanced pool, `(0, 0, 0, 50, 50)` averages 9.00 and the baseline leader 11.10. Against the shortlist pool, `(0, 0, 0, 50, 50)` averages 9.15 and the baseline leader 7.64.
+- Every shortlist leader is countered for 12 of 15 points by some legal allocation, for example `(1, 3, 0, 35, 61)` (`outputs/counters.csv`).
+
+### Optimal play (equilibrium)
+
+The game is symmetric and constant-sum, so an optimal field plays a mixed Nash equilibrium. `python -m castles.equilibrium` approximates it with 2,000 rounds of regret-matching+ self-play over all 4,598,126 allocations (about 8 minutes). It reached an exploitability of 0.0117: against the resulting field, no allocation averages more than 7.5117.
+
+- **The optimal field is very spread out.** 468,058 allocations have probability at least 1e-6, and the 1,000 most likely carry only 0.4% of the mass.
+- **On average it sends soldiers in proportion to castle value:** 6.3, 13.2, 20.0, 26.8, 33.7. Individual allocations are lopsided, though. The most likely ones usually give up one or two castles, for example `(12, 21, 0, 0, 67)` and `(10, 0, 37, 53, 0)`.
+- **Against it, most sensible allocations score almost exactly 7.5:**
+
+| Allocation | Points vs optimal field |
+| --- | --- |
+| `(0, 0, 31, 31, 38)` | 7.503 |
+| `(4, 16, 0, 37, 43)` | 7.502 |
+| `(0, 2, 24, 34, 40)` | 7.501 |
+| `(0, 12, 23, 30, 35)` (baseline leader) | 7.501 |
+| `(7, 13, 20, 27, 33)` (proportional) | 7.500 |
+| `(0, 0, 0, 50, 50)` | 7.499 |
+| `(20, 20, 20, 20, 20)` | 6.998 |
+| `(1, 1, 1, 0, 97)` | 5.367 |
+| `(0, 0, 0, 0, 100)` | 5.147 |
+
+- 17% of all allocations score within 0.05 points of the best possible against this field. The differences among the top allocations (up to about 0.012) are smaller than the solver's remaining exploitability, so they do not identify a better submission.
+- The best pure replies to the computed field, such as `(10, 21, 2, 0, 67)` at 7.512, sit at 7.5 plus the exploitability. Against an exact equilibrium they would score 7.5.
+
+If every competitor really plays optimally, no submission can expect more than 7.5, and many very different allocations reach it. Finishing above 7.5 requires the field to deviate from equilibrium in a predictable way. The pool searches above show how much the best reply depends on those deviations.
+
+Outputs: `outputs/equilibrium_summary.json` (convergence history, average soldiers per castle, top replies), `outputs/equilibrium_marginals.csv` (per-castle soldier distribution of the optimal field), `outputs/equilibrium_best_responses.csv` (best pure replies, also scored against the uniform and shortlist fields) and `outputs/equilibrium_support.csv` (every allocation with probability at least 1e-6; about 20 MB, git-ignored).
 
 ### Takeaways
 
-- With no information about opponents, `(0, 12, 23, 30, 35)` is the safest choice.
-- Against more strategic opponents, something like `(0, 2–6, 24, 34, 40)` scores better.
-- No allocation wins against every pool. The best next step is to score the shortlist against real applicant choices with `python -m castles.analysis --applicants choices.csv`.
+- No single allocation is best against every field. The best reply depends entirely on the opponent distribution.
+- If the field is strategic, the relevant benchmark is optimal (equilibrium) play, where no allocation averages more than 7.5. `python -m castles.equilibrium` approximates that equilibrium.
+- Real applicant choices, if available, can be scored with `python -m castles.analysis --applicants choices.csv`.
 
 ## Game rules
 
