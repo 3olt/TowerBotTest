@@ -29,9 +29,44 @@ python -m pytest                              # validation suite (implementation
 
 Phase 5 writes `outputs/shortlist_reranked.csv` (baseline score and rank kept next to each pool's score and rank), `outputs/counters.csv` (for each leader, the best counter inside the shortlist and the best counter among all legal allocations), and `outputs/analysis_summary.json` (pool definitions and sizes, Spearman rank correlation with the baseline, top strategies per pool). Filter pools exclude a strategy's own entry when it belongs to the pool. Applicant pools do not, since a submission really does face every applicant.
 
-### Initial results
+## Findings
 
-The full baseline runs in about 0.4 s. The best strategy against all legal allocations is `(0, 12, 23, 30, 35)`, averaging 9.8849 points. The top-10,000 cutoff is 9.7517 with no ties at the cutoff. Rankings change a lot under other pools (Spearman about 0.09 to 0.23 within the shortlist). For example, the shortlist's own leader is `(0, 2, 24, 34, 40)`, baseline rank #9163.
+### Baseline: every legal allocation, equally likely
+
+The full baseline runs in about 0.4 s. All 4,598,126 allocations are scored exactly, and the population mean is exactly 7.5 as required.
+
+| Rank | Allocation (castles 1–5) | Average points |
+| --- | --- | --- |
+| 1 | `(0, 12, 23, 30, 35)` | 9.8849 |
+| 2 | `(0, 11, 23, 30, 36)` | 9.8845 |
+| 3 | `(0, 11, 23, 31, 35)` | 9.8842 |
+| 4 | `(0, 11, 24, 30, 35)` | 9.8838 |
+| 5 | `(0, 12, 22, 30, 36)` | 9.8836 |
+
+- Every top-15 strategy sends 0 soldiers to castle 1, about 11–13 to castle 2, about 23 to castle 3, about 30 to castle 4 and about 35 to castle 5.
+- The top 15 lie within 0.003 points of each other. The shape matters more than the exact numbers: give up castle 1 and weight the rest by value.
+- The leaders gain about 2.4 points per matchup over the 7.5 population mean.
+- The top-10,000 cutoff is 9.7517, with no ties at the cutoff, so the shortlist has exactly 10,000 strategies.
+
+### Shortlist analysis: other opponent pools
+
+| Opponent pool | Leader | Average | Baseline rank |
+| --- | --- | --- | --- |
+| Shortlist (survivors vs survivors) | `(0, 2, 24, 34, 40)` | 9.93 | #9163 |
+| Balanced (each castle 10–30) | `(0, 6, 31, 31, 32)`, tied with several others | 12.00 | #5802 |
+| Value-ordered (a1 ≤ … ≤ a5) | `(0, 4, 21, 32, 43)` | 8.46 | #8897 |
+| High-value focus (a4 + a5 ≥ 60) | `(1, 14, 19, 24, 42)` | 8.52 | #9966 |
+
+- Rankings depend strongly on the pool. Within the shortlist, rank correlation with the baseline is only 0.09–0.23.
+- Against strong opponents (the shortlist itself), the best play nearly gives up castle 2 (about 2 soldiers) and moves the extra soldiers to castles 4 and 5.
+- Against balanced opponents, about 31 on each of castles 3, 4 and 5 wins almost every time.
+- Every leader can be countered. Some legal allocation takes 12 of 15 points from each shortlist leader, usually by leaving castle 3 empty and stacking castle 5, for example `(1, 3, 0, 35, 61)`. See `outputs/counters.csv`.
+
+### Takeaways
+
+- With no information about opponents, `(0, 12, 23, 30, 35)` is the safest choice.
+- Against more strategic opponents, something like `(0, 2–6, 24, 34, 40)` scores better.
+- No allocation wins against every pool. The best next step is to score the shortlist against real applicant choices with `python -m castles.analysis --applicants choices.csv`.
 
 ## Game rules
 

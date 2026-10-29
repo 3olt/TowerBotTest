@@ -157,9 +157,9 @@
       "score_key": 90879605
     }
   ],
-  "runtime_seconds": 0.373,
+  "runtime_seconds": 0.36,
   "timings": {
-    "pass1_seconds": 0.206,
-    "pass2_seconds": 0.144
+    "pass1_seconds": 0.193,
+    "pass2_seconds": 0.146
   }
 }
